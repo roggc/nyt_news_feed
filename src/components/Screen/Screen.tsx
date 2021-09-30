@@ -8,6 +8,7 @@ import { sections } from '../../data'
 import Section from '../Section'
 import Header from '../Header'
 import ArticlesList from '../ArticlesList'
+import Filter from '../Filter'
 
 const Screen = () => {
   const dispatch = useDispatch()
@@ -54,6 +55,7 @@ const Screen = () => {
     <View>
       <Header />
       <Section setSection={setSection} />
+      <Filter results={results} />
       <ArticlesList results={results} />
     </View>
   )

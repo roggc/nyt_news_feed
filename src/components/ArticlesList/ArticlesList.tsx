@@ -30,7 +30,9 @@ const ArticlesList: React.FC<IArticlesListProps> = ({ results }) => {
 
 export default ArticlesList
 
-const FlatList = styled.FlatList``
+const FlatList = styled.FlatList`
+  z-index: -1;
+`
 
 const ArticleWrapper = styled.View`
   flex-direction: row;
