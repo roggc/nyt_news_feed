@@ -32,6 +32,7 @@ export default ArticlesList
 
 const FlatList = styled.FlatList`
   z-index: -1;
+  background-color: lightblue;
 `
 
 const ArticleWrapper = styled.View`
@@ -39,7 +40,7 @@ const ArticleWrapper = styled.View`
   padding: 10px;
   border-radius: 10px;
   margin: 10px;
-  background-color: green;
+  background-color: white;
 `
 const Image = styled.Image`
   width: 100px;

@@ -15,7 +15,7 @@ const Header = () => {
 export default Header
 
 const HeaderWrapper = styled.View`
-  background-color: blue;
+  background-color: dodgerblue;
   padding-top: 60px;
   padding-left: 10px;
   padding-bottom: 10px;

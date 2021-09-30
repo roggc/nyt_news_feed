@@ -52,4 +52,5 @@ const FlatList = styled.FlatList`
 
 const Wrapper = styled.View`
   padding: 10px;
+  background-color: ghostwhite;
 `

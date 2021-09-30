@@ -207,6 +207,9 @@ const FilterWrapper = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  background-color: deepskyblue;
+  /*border-top-left-radius: 10px;
+  border-top-right-radius: 10px;*/
 `
 
 const DropDownPicker = styled(DDP)`
