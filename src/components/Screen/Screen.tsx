@@ -19,6 +19,7 @@ const Screen = () => {
     (state: RootState) => state.reducer
   )
   const [section, setSection] = useState(sections[sectionIndex])
+  const [filteredResults, setFilteredResults] = useState(results)
 
   useEffect(() => {
     const fetchAsync = async () => {
@@ -61,8 +62,8 @@ const Screen = () => {
     <View>
       <Header />
       <Section setSection={setSection} />
-      <Filter results={results} />
-      <ArticlesList results={results} />
+      <Filter results={results} setFilteredResults={setFilteredResults} />
+      <ArticlesList results={filteredResults} />
     </View>
   )
 }

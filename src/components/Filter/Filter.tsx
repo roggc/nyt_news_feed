@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components/native'
-import DDP from 'react-native-dropdown-picker'
+import DDP, { ValueType } from 'react-native-dropdown-picker'
 import { IResult } from '../../interfaces'
 
 const DROP_DOWN_WIDTH = 150
+const LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE = 'Location'
+const KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE = 'Keywords'
 
 interface IDropDownItem {
   label: string
@@ -12,9 +14,10 @@ interface IDropDownItem {
 
 interface IFilterProps {
   results: IResult[]
+  setFilteredResults: React.Dispatch<React.SetStateAction<IResult[]>>
 }
 
-const Filter: React.FC<IFilterProps> = ({ results }) => {
+const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
   const [descriptionDropDownValue, setDescriptionDropDownValue] = useState(null)
   const [descriptionDropDownOpen, setDescriptionDropDownOpen] = useState(false)
   const [locationDropDownValue, setLocationDropDownValue] = useState(null)
@@ -55,7 +58,12 @@ const Filter: React.FC<IFilterProps> = ({ results }) => {
     setLocationKeys(locationKeys_.sort((a, b) => (a > b ? 1 : -1)))
   }, [results])
   useEffect(() => {
-    const descriptionDropDownItems_: IDropDownItem[] = []
+    const descriptionDropDownItems_: IDropDownItem[] = [
+      {
+        label: KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE,
+        value: KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE,
+      },
+    ]
     descriptionKeys.forEach((key) => {
       descriptionDropDownItems_.push({ label: key, value: key })
     })
@@ -64,7 +72,12 @@ const Filter: React.FC<IFilterProps> = ({ results }) => {
     setDescriptionDropDownValue(null)
   }, [descriptionKeys])
   useEffect(() => {
-    const locationDropDownItems_: IDropDownItem[] = []
+    const locationDropDownItems_: IDropDownItem[] = [
+      {
+        label: LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE,
+        value: LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE,
+      },
+    ]
     locationKeys.forEach((key) => {
       locationDropDownItems_.push({ label: key, value: key })
     })
@@ -72,6 +85,84 @@ const Filter: React.FC<IFilterProps> = ({ results }) => {
     setLocationDropDownOpen(false)
     setLocationDropDownValue(null)
   }, [locationKeys])
+  const filterByLocation = useCallback(
+    (value: ValueType | ValueType[] | null) => {
+      let filteredResults_: IResult[] = []
+      if (value === LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE || value === null) {
+        if (
+          descriptionDropDownValue === KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE ||
+          descriptionDropDownValue === null
+        ) {
+          filteredResults_ = [...results]
+        } else {
+          filteredResults_ = results.filter((result) =>
+            result.des_facet.some(
+              (desKey) => desKey === descriptionDropDownValue
+            )
+          )
+        }
+      } else {
+        if (
+          descriptionDropDownValue === KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE ||
+          descriptionDropDownValue === null
+        ) {
+          filteredResults_ = results.filter((result) =>
+            result.geo_facet.some((geoKey) => geoKey === value)
+          )
+        } else {
+          filteredResults_ = results
+            .filter((result) =>
+              result.geo_facet.some((geoKey) => geoKey === value)
+            )
+            .filter((result) =>
+              result.des_facet.some(
+                (desKey) => desKey === descriptionDropDownValue
+              )
+            )
+        }
+      }
+      setFilteredResults(filteredResults_)
+    },
+    [results, descriptionDropDownValue]
+  )
+  const filterByKeyword = useCallback(
+    (value: ValueType | ValueType[] | null) => {
+      let filteredResults_: IResult[] = []
+      if (value === KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE || value === null) {
+        if (
+          locationDropDownValue === LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE ||
+          locationDropDownValue === null
+        ) {
+          filteredResults_ = [...results]
+        } else {
+          filteredResults_ = results.filter((result) =>
+            result.geo_facet.some((geoKey) => geoKey === locationDropDownValue)
+          )
+        }
+      } else {
+        if (
+          locationDropDownValue === LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE ||
+          locationDropDownValue === null
+        ) {
+          filteredResults_ = results.filter((result) =>
+            result.des_facet.some((desKey) => desKey === value)
+          )
+        } else {
+          filteredResults_ = results
+            .filter((result) =>
+              result.des_facet.some((desKey) => desKey === value)
+            )
+            .filter((result) =>
+              result.geo_facet.some(
+                (geoKey) => geoKey === locationDropDownValue
+              )
+            )
+        }
+      }
+      setFilteredResults(filteredResults_)
+    },
+    [results, locationDropDownValue]
+  )
   return (
     <FilterWrapper>
       <DropDownWrapper>
@@ -86,7 +177,8 @@ const Filter: React.FC<IFilterProps> = ({ results }) => {
           }}
           zIndex={1000}
           containerStyle={{ width: DROP_DOWN_WIDTH }}
-          placeholder="Location"
+          placeholder={LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE}
+          onChangeValue={filterByLocation}
         />
       </DropDownWrapper>
       <DropDownWrapper>
@@ -101,7 +193,8 @@ const Filter: React.FC<IFilterProps> = ({ results }) => {
           }}
           zIndex={1000}
           containerStyle={{ width: DROP_DOWN_WIDTH }}
-          placeholder="Keywords"
+          placeholder={KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE}
+          onChangeValue={filterByKeyword}
         />
       </DropDownWrapper>
     </FilterWrapper>
