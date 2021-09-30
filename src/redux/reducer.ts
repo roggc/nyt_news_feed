@@ -1,4 +1,4 @@
-import { IResult } from '../components/app'
+import { IResult } from '../interfaces'
 import { ActionTypes, SET_RESULTS } from './actions'
 
 interface IState {
