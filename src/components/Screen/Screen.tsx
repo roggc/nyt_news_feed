@@ -51,7 +51,15 @@ const Screen = () => {
               multimedia: { type, url },
             })
           })
-          dispatch(setResults(results_))
+          dispatch(
+            setResults(
+              results_.sort(
+                (a, b) =>
+                  new Date(b.published_date).getTime() -
+                  new Date(a.published_date).getTime()
+              )
+            )
+          )
         }
       } catch (e) {
         console.log(e)
