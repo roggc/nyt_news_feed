@@ -1,9 +1,18 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components/native'
 import { sections } from '../../data'
 import { Text } from '../utils'
 import { useDispatch } from 'react-redux'
 import { setSectionIndex } from '../../redux'
+import { TwoButtons } from '../utils'
+
+const FIRST_SECTION = 0
+const SECOND_SECTION = 1
+
+interface ISection_ {
+  section: string
+  index: number
+}
 
 interface ISectionProps {
   setSection: React.Dispatch<React.SetStateAction<string>>
@@ -11,19 +20,32 @@ interface ISectionProps {
 
 const Section: React.FC<ISectionProps> = ({ setSection }) => {
   const dispatch = useDispatch()
+
   const renderItem = ({ item }: any) => {
-    const section_ = item as string
-    const sectionIndex = sections.findIndex((sect) => sect === section_)
+    const twoSections = item as ISection_[]
+    const showResultsForSection = (section_: ISection_) => () => {
+      setSection(section_.section)
+      dispatch(setSectionIndex(section_.index))
+    }
     return (
-      <Button
-        onPress={() => {
-          setSection(section_)
-          dispatch(setSectionIndex(sectionIndex))
-        }}
-        title={section_}
+      <TwoButtons
+        onPressButtonBottom={showResultsForSection(twoSections[FIRST_SECTION])}
+        onPressButtonTop={showResultsForSection(twoSections[SECOND_SECTION])}
+        titleBottom={twoSections[FIRST_SECTION].section}
+        titleTop={twoSections[SECOND_SECTION].section}
       />
     )
   }
+
+  const sections_ = useMemo(() => {
+    const sections_ = sections.map((section, index) => ({ section, index }))
+    const sections__ = []
+    for (let i = 0; i < sections_.length; i += 2) {
+      sections__.push([sections_[i], sections_[i + 1]])
+    }
+    return sections__
+  }, [sections])
+
   return (
     <Wrapper>
       <Text isBold>Section</Text>
@@ -32,7 +54,7 @@ const Section: React.FC<ISectionProps> = ({ setSection }) => {
         numColumns={Math.ceil(sections.length / 2)}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        data={sections}
+        data={sections_}
         renderItem={renderItem}
       />
     </Wrapper>
@@ -41,10 +63,6 @@ const Section: React.FC<ISectionProps> = ({ setSection }) => {
 
 export default Section
 
-const Button = styled.Button`
-  margin: 0px;
-  padding: 0px;
-`
 const FlatList = styled.FlatList`
   padding: 0px;
   margin: 0px;
