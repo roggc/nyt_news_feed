@@ -9,6 +9,7 @@ import Section from '../Section'
 import Header from '../Header'
 import ArticlesList from '../ArticlesList'
 import Filter from '../Filter'
+import { useIsConnected } from 'react-native-offline'
 
 const SINGLE_OR_DEFAULT = 0
 
@@ -20,6 +21,7 @@ const Screen = () => {
   )
   const [section, setSection] = useState(sections[sectionIndex])
   const [filteredResults, setFilteredResults] = useState(results)
+  const isConnected_ = useIsConnected()
 
   useEffect(() => {
     const fetchAsync = async () => {
@@ -56,7 +58,7 @@ const Screen = () => {
       }
     }
     isConnected && fetchAsync()
-  }, [isConnected, section])
+  }, [isConnected, section, isConnected_])
 
   return (
     <View>

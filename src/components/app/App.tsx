@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-import { ReduxNetworkProvider } from 'react-native-offline'
+import { ReduxNetworkProvider, NetworkProvider } from 'react-native-offline'
 import { store, persistor } from '../../redux'
 import Screen from '../Screen'
 
@@ -19,7 +19,9 @@ const App = () => {
           httpMethod="HEAD"
           customHeaders={{}}
         >
-          <Screen />
+          <NetworkProvider>
+            <Screen />
+          </NetworkProvider>
         </ReduxNetworkProvider>
       </PersistGate>
     </Provider>
