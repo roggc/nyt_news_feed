@@ -16,7 +16,7 @@ export default Header
 
 const HeaderWrapper = styled.View`
   background-color: blue;
-  flex: 1;
   padding-top: 60px;
   padding-left: 10px;
+  padding-bottom: 10px;
 `

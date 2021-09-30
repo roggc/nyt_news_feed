@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState, setResults } from '../../redux'
 import { sections } from '../../data'
 import Section from '../Section'
-import { Text } from '../utils'
 import Header from '../Header'
+import ArticlesList from '../ArticlesList'
 
 const Screen = () => {
   const dispatch = useDispatch()
@@ -50,20 +50,11 @@ const Screen = () => {
     isConnected && fetchAsync()
   }, [isConnected, section])
 
-  const renderItem = ({ item }: any) => {
-    const result = item as IResult
-    return (
-      <Text key={result.title} isBold>
-        {result.title}
-      </Text>
-    )
-  }
-
   return (
     <View>
       <Header />
       <Section setSection={setSection} />
-      <FlatList renderItem={renderItem} data={results} />
+      <ArticlesList results={results} />
     </View>
   )
 }
@@ -72,8 +63,4 @@ export default Screen
 
 const View = styled.View`
   flex: 1;
-`
-
-const FlatList = styled.FlatList`
-  flex: 20;
 `
