@@ -10,11 +10,15 @@ import Header from '../Header'
 import ArticlesList from '../ArticlesList'
 import Filter from '../Filter'
 
+const SINGLE_OR_DEFAULT = 0
+
 const Screen = () => {
   const dispatch = useDispatch()
   const { isConnected } = useSelector((state: RootState) => state.network)
-  const { results } = useSelector((state: RootState) => state.reducer)
-  const [section, setSection] = useState(sections[0])
+  const { results, sectionIndex } = useSelector(
+    (state: RootState) => state.reducer
+  )
+  const [section, setSection] = useState(sections[sectionIndex])
 
   useEffect(() => {
     const fetchAsync = async () => {
@@ -32,7 +36,9 @@ const Screen = () => {
               des_facet,
               multimedia,
             } = result
-            const { type, url }: IMultimedia = !!multimedia ? multimedia[0] : {}
+            const { type, url }: IMultimedia = !!multimedia
+              ? multimedia[SINGLE_OR_DEFAULT]
+              : {}
             results_.push({
               byline,
               title,

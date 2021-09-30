@@ -4,5 +4,5 @@ import { render } from '@testing-library/react-native'
 import Filter from '.'
 
 it('renders', () => {
-  render(<Filter />)
+  render(<Filter results={[]} />)
 })

@@ -2,18 +2,23 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { sections } from '../../data'
 import { Text } from '../utils'
+import { useDispatch } from 'react-redux'
+import { setSectionIndex } from '../../redux'
 
 interface ISectionProps {
   setSection: React.Dispatch<React.SetStateAction<string>>
 }
 
 const Section: React.FC<ISectionProps> = ({ setSection }) => {
+  const dispatch = useDispatch()
   const renderItem = ({ item }: any) => {
     const section_ = item as string
+    const sectionIndex = sections.findIndex((sect) => sect === section_)
     return (
       <Button
         onPress={() => {
           setSection(section_)
+          dispatch(setSectionIndex(sectionIndex))
         }}
         title={section_}
       />

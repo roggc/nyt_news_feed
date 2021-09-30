@@ -1,8 +1,6 @@
 import { IResult } from '../interfaces'
-export const GET_DATA = 'SAVE_DATA'
-export const GET_DATA_COMMIT = 'GET_DATA_COMMIT'
-export const SAVE_DATA_ROLLBACK = 'SAVE_DATA_ROLLBACK'
 export const SET_RESULTS = 'SET_RESULTS'
+export const SET_SECTION_INDEX = 'SET_SECTION_INDEX'
 
 export const setResults = (results: IResult[]) =>
   ({
@@ -10,4 +8,12 @@ export const setResults = (results: IResult[]) =>
     payload: results,
   } as const)
 
-export type ActionTypes = ReturnType<typeof setResults>
+export const setSectionIndex = (sectionIndex: number) =>
+  ({
+    type: SET_SECTION_INDEX,
+    payload: sectionIndex,
+  } as const)
+
+export type ActionTypes =
+  | ReturnType<typeof setResults>
+  | ReturnType<typeof setSectionIndex>
