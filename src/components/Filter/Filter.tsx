@@ -1,6 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components/native'
+import { Platform } from 'react-native'
 import DDP, { ValueType } from 'react-native-dropdown-picker'
+import RNPickerSelect from 'react-native-picker-select'
 import { IResult } from '../../interfaces'
 
 const DROP_DOWN_WIDTH = 150
@@ -18,9 +20,13 @@ interface IFilterProps {
 }
 
 const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
-  const [descriptionDropDownValue, setDescriptionDropDownValue] = useState(null)
+  const [descriptionDropDownValue, setDescriptionDropDownValue] = useState<
+    string | null
+  >(null)
   const [descriptionDropDownOpen, setDescriptionDropDownOpen] = useState(false)
-  const [locationDropDownValue, setLocationDropDownValue] = useState(null)
+  const [locationDropDownValue, setLocationDropDownValue] = useState<
+    string | null
+  >(null)
   const [locationDropDownOpen, setLocationDropDownOpen] = useState(false)
   const [descriptionKeys, setDescriptionKeys] = useState<string[]>([])
   const [locationKeys, setLocationKeys] = useState<string[]>([])
@@ -30,6 +36,7 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
   const [locationDropDownItems, setLocationDropDownItems] = useState<
     IDropDownItem[]
   >([])
+
   useEffect(() => {
     const descriptionKeys_: string[] = []
     const locationKeys_: string[] = []
@@ -57,13 +64,17 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     setDescriptionKeys(descriptionKeys_.sort((a, b) => (a > b ? 1 : -1)))
     setLocationKeys(locationKeys_.sort((a, b) => (a > b ? 1 : -1)))
   }, [results])
+
   useEffect(() => {
-    const descriptionDropDownItems_: IDropDownItem[] = [
-      {
-        label: KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE,
-        value: KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE,
-      },
-    ]
+    const descriptionDropDownItems_: IDropDownItem[] =
+      Platform.OS === 'android'
+        ? []
+        : [
+            {
+              label: KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE,
+              value: KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE,
+            },
+          ]
     descriptionKeys.forEach((key) => {
       descriptionDropDownItems_.push({ label: key, value: key })
     })
@@ -71,13 +82,17 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     setDescriptionDropDownOpen(false)
     setDescriptionDropDownValue(null)
   }, [descriptionKeys])
+
   useEffect(() => {
-    const locationDropDownItems_: IDropDownItem[] = [
-      {
-        label: LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE,
-        value: LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE,
-      },
-    ]
+    const locationDropDownItems_: IDropDownItem[] =
+      Platform.OS === 'android'
+        ? []
+        : [
+            {
+              label: LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE,
+              value: LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE,
+            },
+          ]
     locationKeys.forEach((key) => {
       locationDropDownItems_.push({ label: key, value: key })
     })
@@ -85,8 +100,12 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     setLocationDropDownOpen(false)
     setLocationDropDownValue(null)
   }, [locationKeys])
+
   const filterByLocation = useCallback(
     (value: ValueType | ValueType[] | null) => {
+      if (Platform.OS === 'android') {
+        setLocationDropDownValue(value as string)
+      }
       let filteredResults_: IResult[] = []
       if (value === LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE || value === null) {
         if (
@@ -127,6 +146,9 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
   )
   const filterByKeyword = useCallback(
     (value: ValueType | ValueType[] | null) => {
+      if (Platform.OS === 'android') {
+        setDescriptionDropDownValue(value as string)
+      }
       let filteredResults_: IResult[] = []
       if (value === KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE || value === null) {
         if (
@@ -163,8 +185,9 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     },
     [results, locationDropDownValue]
   )
-  return (
-    <FilterWrapper>
+
+  const getDropDwonsForIOS = () => (
+    <>
       <DropDownWrapper>
         <DropDownPicker
           items={locationDropDownItems}
@@ -175,7 +198,6 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
           onOpen={() => {
             setDescriptionDropDownOpen(false)
           }}
-          zIndex={1000}
           containerStyle={{ width: DROP_DOWN_WIDTH }}
           placeholder={LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE}
           onChangeValue={filterByLocation}
@@ -191,12 +213,60 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
           onOpen={() => {
             setLocationDropDownOpen(false)
           }}
-          zIndex={1000}
           containerStyle={{ width: DROP_DOWN_WIDTH }}
           placeholder={KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE}
           onChangeValue={filterByKeyword}
         />
       </DropDownWrapper>
+    </>
+  )
+
+  const getDropDownsForAndroid = useCallback(
+    () => (
+      <>
+        <RNPickerSelect
+          onValueChange={filterByLocation}
+          items={locationDropDownItems}
+          style={{
+            inputAndroid: { color: 'black', width: 150 },
+            placeholder: { color: 'black' },
+          }}
+          placeholder={{
+            label: LOCATION_DROP_DOWN_DO_NOT_FILTER_VALUE,
+            value: null,
+          }}
+          value={locationDropDownValue}
+        />
+        <RNPickerSelect
+          onValueChange={filterByKeyword}
+          items={descriptionDropDownItems}
+          style={{
+            inputAndroid: { width: 150, color: 'black' },
+            placeholder: { color: 'black' },
+          }}
+          placeholder={{
+            label: KEYWORDS_DROP_DOWN_DO_NOT_FILTER_VALUE,
+            value: null,
+          }}
+          value={descriptionDropDownValue}
+        />
+      </>
+    ),
+    [
+      locationDropDownItems,
+      descriptionDropDownItems,
+      filterByLocation,
+      filterByKeyword,
+      locationDropDownValue,
+      descriptionDropDownValue,
+    ]
+  )
+
+  return (
+    <FilterWrapper>
+      {Platform.OS !== 'android'
+        ? getDropDwonsForIOS()
+        : getDropDownsForAndroid()}
     </FilterWrapper>
   )
 }
@@ -208,8 +278,6 @@ const FilterWrapper = styled.View`
   justify-content: center;
   align-items: center;
   background-color: deepskyblue;
-  /*border-top-left-radius: 10px;
-  border-top-right-radius: 10px;*/
 `
 
 const DropDownPicker = styled(DDP)`

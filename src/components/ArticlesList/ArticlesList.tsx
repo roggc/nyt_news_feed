@@ -66,6 +66,7 @@ export default ArticlesList
 
 const FlatList = styled.FlatList`
   z-index: -1;
+  elevation: -1;
   background-color: lightblue;
 `
 

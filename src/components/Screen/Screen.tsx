@@ -65,7 +65,7 @@ const Screen = () => {
         console.log(e)
       }
     }
-    isConnected && fetchAsync()
+    ;(isConnected_ || isConnected) && fetchAsync()
   }, [isConnected, section, isConnected_])
 
   return (

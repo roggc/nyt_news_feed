@@ -14,10 +14,13 @@ export const TwoButtons: React.FC<ITwoButtonsProps> = ({
   onPressButtonTop,
   titleTop,
   titleBottom,
+  ...props
 }) => {
   return (
-    <TwoButtonsWrapper>
-      <Button onPress={onPressButtonTop} title={titleTop} />
+    <TwoButtonsWrapper {...props}>
+      <FirstButtonWrapper>
+        <Button onPress={onPressButtonTop} title={titleTop} />
+      </FirstButtonWrapper>
       <Button onPress={onPressButtonBottom} title={titleBottom} />
     </TwoButtonsWrapper>
   )
@@ -32,4 +35,8 @@ const TwoButtonsWrapper = styled.View`
 const Button = styled.Button`
   margin: 0px;
   padding: 0px;
+`
+
+const FirstButtonWrapper = styled.View`
+  margin-bottom: 5px;
 `

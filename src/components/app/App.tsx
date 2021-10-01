@@ -13,13 +13,13 @@ const App = () => {
           pingTimeout={10000}
           pingServerUrl="https://www.google.com/"
           shouldPing={true}
-          pingInterval={0}
+          pingInterval={20000}
           pingOnlyIfOffline={false}
           pingInBackground={false}
           httpMethod="HEAD"
           customHeaders={{}}
         >
-          <NetworkProvider>
+          <NetworkProvider pingInterval={20000}>
             <Screen />
           </NetworkProvider>
         </ReduxNetworkProvider>

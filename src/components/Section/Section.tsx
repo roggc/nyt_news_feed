@@ -33,6 +33,7 @@ const Section: React.FC<ISectionProps> = ({ setSection }) => {
         onPressButtonTop={showResultsForSection(twoSections[SECOND_SECTION])}
         titleBottom={twoSections[FIRST_SECTION].section}
         titleTop={twoSections[SECOND_SECTION].section}
+        style={{ margin: 5 }}
       />
     )
   }
@@ -51,7 +52,7 @@ const Section: React.FC<ISectionProps> = ({ setSection }) => {
       <Text isBold>Section</Text>
       <FlatList
         contentContainerStyle={{ alignSelf: 'flex-start' }}
-        numColumns={Math.ceil(sections.length / 2)}
+        horizontal={true}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         data={sections_}
