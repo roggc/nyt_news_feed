@@ -10,6 +10,8 @@ import Header from '../Header'
 import ArticlesList from '../ArticlesList'
 import Filter from '../Filter'
 import { useIsConnected } from 'react-native-offline'
+import NetInfo from '@react-native-community/netinfo'
+import { Platform } from 'react-native'
 
 const SINGLE_OR_DEFAULT = 0
 
@@ -22,6 +24,18 @@ const Screen = () => {
   const [section, setSection] = useState(sections[sectionIndex])
   const [filteredResults, setFilteredResults] = useState(results)
   const isConnected_ = useIsConnected()
+  const [isConnected__, setIsConnected__] = useState(false)
+
+  useEffect(() => {
+    if (Platform.OS !== 'android') {
+      const unsubscribe = NetInfo.addEventListener(({ isConnected }) => {
+        setIsConnected__(isConnected ?? false)
+      })
+      return () => {
+        unsubscribe()
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const fetchAsync = async () => {
@@ -65,8 +79,8 @@ const Screen = () => {
         console.log(e)
       }
     }
-    ;(isConnected_ || isConnected) && fetchAsync()
-  }, [isConnected, section, isConnected_])
+    ;(isConnected_ || isConnected || isConnected__) && fetchAsync()
+  }, [isConnected, section, isConnected_, isConnected__])
 
   return (
     <View>
