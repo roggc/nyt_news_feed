@@ -49,7 +49,7 @@ const Screen = () => {
         const { status, results: results__ }: IData = await resp.json()
         if (status === 'OK') {
           const results_: IResult[] = []
-          results__.forEach((result) => {
+          results__.forEach((result, index) => {
             const {
               byline,
               title,
@@ -62,6 +62,7 @@ const Screen = () => {
               ? multimedia[SINGLE_OR_DEFAULT]
               : {}
             results_.push({
+              id: `${title}_${index}`,
               byline,
               title,
               published_date,

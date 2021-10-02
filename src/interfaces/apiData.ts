@@ -14,6 +14,7 @@ export interface IResult {
   geo_facet: string[]
   des_facet: string[]
   multimedia: IMultimedia
+  id: string
 }
 
 export interface IData {

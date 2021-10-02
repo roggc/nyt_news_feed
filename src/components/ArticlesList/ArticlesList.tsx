@@ -65,13 +65,7 @@ const ArticlesList: React.FC<IArticlesListProps> = ({ results }) => {
     )
   }
 
-  return (
-    <StyledFlatList
-      renderItem={renderItem}
-      data={results}
-      keyExtractor={(item) => item.title}
-    />
-  )
+  return <StyledFlatList renderItem={renderItem} data={results} />
 }
 
 export default ArticlesList
