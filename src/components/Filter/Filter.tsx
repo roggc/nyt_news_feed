@@ -19,6 +19,9 @@ interface IFilterProps {
   setFilteredResults: React.Dispatch<React.SetStateAction<IResult[]>>
 }
 
+/**
+ * shows two dropdowns to filter by location and keywords
+ */
 const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
   const [descriptionDropDownValue, setDescriptionDropDownValue] = useState<
     string | null
@@ -37,6 +40,7 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     IDropDownItem[]
   >([])
 
+  // set new location key words and description key words when results change
   useEffect(() => {
     const descriptionKeys_: string[] = []
     const locationKeys_: string[] = []
@@ -65,6 +69,7 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     setLocationKeys(locationKeys_.sort((a, b) => (a > b ? 1 : -1)))
   }, [results])
 
+  // refill description keywords dropdown
   useEffect(() => {
     const descriptionDropDownItems_: IDropDownItem[] =
       Platform.OS === 'android'
@@ -83,6 +88,7 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     setDescriptionDropDownValue(null)
   }, [descriptionKeys])
 
+  // refill location keywords dropdown
   useEffect(() => {
     const locationDropDownItems_: IDropDownItem[] =
       Platform.OS === 'android'
@@ -101,6 +107,9 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     setLocationDropDownValue(null)
   }, [locationKeys])
 
+  /**
+   * filters by location keywords
+   */
   const filterByLocation = useCallback(
     (value: ValueType | ValueType[] | null) => {
       if (Platform.OS === 'android') {
@@ -144,6 +153,10 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     },
     [results, descriptionDropDownValue]
   )
+
+  /**
+   * filters by description keywords
+   */
   const filterByKeyword = useCallback(
     (value: ValueType | ValueType[] | null) => {
       if (Platform.OS === 'android') {
@@ -186,6 +199,10 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     [results, locationDropDownValue]
   )
 
+  /**
+   * renders dropdowns for iOS
+   * @returns {JSX.Element}
+   */
   const getDropDwonsForIOS = () => (
     <>
       <DropDownWrapper>
@@ -221,6 +238,9 @@ const Filter: React.FC<IFilterProps> = ({ results, setFilteredResults }) => {
     </>
   )
 
+  /**
+   * renders dropdowns for android
+   */
   const getDropDownsForAndroid = useCallback(
     () => (
       <>

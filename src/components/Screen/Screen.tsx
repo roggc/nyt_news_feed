@@ -29,6 +29,7 @@ const Screen = () => {
   const isConnected_ = useIsConnected()
   const [isConnected__, setIsConnected__] = useState(false)
 
+  // on iOS try to detect when internet connection is back
   useEffect(() => {
     if (Platform.OS !== 'android') {
       const unsubscribe = NetInfo.addEventListener(({ isConnected }) => {
@@ -40,6 +41,7 @@ const Screen = () => {
     }
   }, [])
 
+  // when section changes or internet connection is back, try to fetch results (news)
   useEffect(() => {
     const fetchAsync = async () => {
       try {

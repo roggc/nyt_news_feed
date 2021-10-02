@@ -24,6 +24,10 @@ interface ISectionProps {
   setSection: React.Dispatch<React.SetStateAction<string>>
 }
 
+/**
+ * renders the available sections
+ * @returns {JSX.Element}
+ */
 const Section: React.FC<ISectionProps> = ({ setSection }) => {
   const dispatch = useDispatch()
 
@@ -34,6 +38,7 @@ const Section: React.FC<ISectionProps> = ({ setSection }) => {
       setSection(section_.section)
       dispatch(setSectionIndex(section_.index))
     }
+
     return (
       <TwoButtons
         onPressButtonBottom={showResultsForSection(
@@ -49,6 +54,9 @@ const Section: React.FC<ISectionProps> = ({ setSection }) => {
     )
   }
 
+  /**
+   * sections grouped in pairs of two, to show the buttons centered (to be consumed by TwoButtons component)
+   */
   const sections_ = useMemo(() => {
     const sections_: ISection_[] = sections.map((section, index) => ({
       section,

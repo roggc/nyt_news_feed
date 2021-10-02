@@ -3,6 +3,10 @@ import styled from 'styled-components/native'
 import { Platform } from 'react-native'
 import { Text } from '../utils'
 
+/**
+ * renders a header
+ * @returns {JSX.Element}
+ */
 const Header = () => {
   return (
     <HeaderWrapper>

@@ -9,22 +9,24 @@ interface ITwoButtonsProps extends ViewProps {
   titleBottom: string
 }
 
+/**
+ * show two buttons, one on top of other, centered
+ * @returns {JSX.Element}
+ */
 export const TwoButtons: React.FC<ITwoButtonsProps> = ({
   onPressButtonBottom,
   onPressButtonTop,
   titleTop,
   titleBottom,
   ...props
-}) => {
-  return (
-    <TwoButtonsWrapper {...props}>
-      <FirstButtonWrapper>
-        <Button onPress={onPressButtonTop} title={titleTop} />
-      </FirstButtonWrapper>
-      <Button onPress={onPressButtonBottom} title={titleBottom} />
-    </TwoButtonsWrapper>
-  )
-}
+}) => (
+  <TwoButtonsWrapper {...props}>
+    <FirstButtonWrapper>
+      <Button onPress={onPressButtonTop} title={titleTop} />
+    </FirstButtonWrapper>
+    <Button onPress={onPressButtonBottom} title={titleBottom} />
+  </TwoButtonsWrapper>
+)
 
 const TwoButtonsWrapper = styled.View`
   align-self: center;
