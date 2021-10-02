@@ -1,14 +1,16 @@
-//import 'react-native'
 import React from 'react'
 import { render } from '@testing-library/react-native'
-import Section from '.'
+import Screen from '.'
 import { Provider } from 'react-redux'
 import { store } from '../../redux'
+import { NetworkProvider } from 'react-native-offline'
 
 it('renders', () => {
   render(
     <Provider store={store}>
-      <Section setSection={() => {}} />
+      <NetworkProvider>
+        <Screen />
+      </NetworkProvider>
     </Provider>
   )
 })
