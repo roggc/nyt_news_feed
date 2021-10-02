@@ -15,6 +15,9 @@ import { Platform } from 'react-native'
 
 const SINGLE_OR_DEFAULT = 0
 
+/**
+ * the app itself, there is only one screen in this app
+ */
 const Screen = () => {
   const dispatch = useDispatch()
   const { isConnected } = useSelector((state: RootState) => state.network)

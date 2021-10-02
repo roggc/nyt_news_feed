@@ -8,6 +8,9 @@ interface IArticlesListProps {
   results: IResult[]
 }
 
+/**
+ * displays a list of articles
+ */
 const ArticlesList: React.FC<IArticlesListProps> = ({ results }) => {
   const momentNow = moment()
   const momentNowYear = momentNow.year()

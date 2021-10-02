@@ -5,6 +5,9 @@ import { ReduxNetworkProvider, NetworkProvider } from 'react-native-offline'
 import { store, persistor } from '../../redux'
 import Screen from '../Screen'
 
+/**
+ * offline first nyt news feed application
+ */
 const App = () => {
   return (
     <Provider store={store}>
