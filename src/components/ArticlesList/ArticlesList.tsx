@@ -1,8 +1,11 @@
 import React from 'react'
 import styled from 'styled-components/native'
+import { ListRenderItem, FlatList } from 'react-native'
 import { Text } from '../utils'
 import { IResult } from '../../interfaces'
 import moment from 'moment'
+
+const LITTLE_FONT_SIZE = 10
 
 interface IArticlesListProps {
   results: IResult[]
@@ -19,9 +22,8 @@ const ArticlesList: React.FC<IArticlesListProps> = ({ results }) => {
   const momentNowHour = momentNow.hour()
   const momentNowMinute = momentNow.minute()
 
-  const renderItem = ({ item }: any) => {
+  const renderItem: ListRenderItem<IResult> = ({ item: result }) => {
     let published = ''
-    const result = item as IResult
     const momentPublished = moment(result.published_date)
     const momentPublishedMinute = momentPublished.minute()
     const momentPublishedHour = momentPublished.hour()
@@ -48,26 +50,32 @@ const ArticlesList: React.FC<IArticlesListProps> = ({ results }) => {
     }
 
     return (
-      <ArticleWrapper key={result.title}>
+      <ArticleWrapper>
         <Image source={{ uri: result.multimedia.url }} />
         <ArticleRightSide>
           <Text isBold style={{ flexShrink: 1 }}>
             {result.title}
           </Text>
           <BottomText>
-            <Text fontSize={10}>{result.byline}</Text>
-            <Text fontSize={10}>{`Published: ${published}`}</Text>
+            <Text fontSize={LITTLE_FONT_SIZE}>{result.byline}</Text>
+            <Text fontSize={LITTLE_FONT_SIZE}>{`Published: ${published}`}</Text>
           </BottomText>
         </ArticleRightSide>
       </ArticleWrapper>
     )
   }
-  return <FlatList renderItem={renderItem} data={results} />
+  return (
+    <StyledFlatList
+      renderItem={renderItem}
+      data={results}
+      keyExtractor={(item) => item.title}
+    />
+  )
 }
 
 export default ArticlesList
 
-const FlatList = styled.FlatList`
+const StyledFlatList = styled(FlatList as new () => FlatList<IResult>)`
   z-index: -1;
   elevation: -1;
   background-color: lightblue;
