@@ -64,6 +64,7 @@ const ArticlesList: React.FC<IArticlesListProps> = ({ results }) => {
       </ArticleWrapper>
     )
   }
+
   return (
     <StyledFlatList
       renderItem={renderItem}
